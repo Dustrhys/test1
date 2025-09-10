@@ -1,0 +1,93 @@
+--[[ 
+ FarmHub UI Example
+ สคริปต์ทดสอบ UI คล้ายในภาพ
+ ใช้สร้าง GUI เล็ก ๆ พร้อมปุ่ม toggle และ dropdown
+]]
+
+-- GUI หลัก
+local FarmHub = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+
+FarmHub.Name = "FarmHub"
+FarmHub.ResetOnSpawn = false
+FarmHub.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+
+-- กรอบ
+Frame.Size = UDim2.new(0, 350, 0, 250)
+Frame.Position = UDim2.new(0.5, -175, 0.5, -125)
+Frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+Frame.BorderSizePixel = 0
+Frame.Parent = FarmHub
+
+-- หัวข้อ
+Title.Text = "Farm"
+Title.Size = UDim2.new(1,0,0,35)
+Title.BackgroundColor3 = Color3.fromRGB(50,50,50)
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 22
+Title.Parent = Frame
+
+-- ฟังก์ชันสร้างปุ่ม Toggle
+local function createToggle(name, posY, callback)
+    local btn = Instance.new("TextButton")
+    btn.Text = name .. ": OFF"
+    btn.Size = UDim2.new(1,-20,0,30)
+    btn.Position = UDim2.new(0,10,0,posY)
+    btn.BackgroundColor3 = Color3.fromRGB(70,70,70)
+    btn.TextColor3 = Color3.fromRGB(255,255,255)
+    btn.Parent = Frame
+
+    local state = false
+    btn.MouseButton1Click:Connect(function()
+        state = not state
+        btn.Text = name .. ": " .. (state and "ON" or "OFF")
+        callback(state)
+    end)
+end
+
+-- ปุ่ม Auto Collect
+createToggle("Auto Collect", 50, function(state)
+    print("Auto Collect:", state)
+end)
+
+-- ปุ่ม Hatch Aura
+createToggle("Hatch Aura", 90, function(state)
+    print("Hatch Aura:", state)
+end)
+
+-- หัวข้อ Auto Buy Egg
+local subTitle = Instance.new("TextLabel")
+subTitle.Text = "Auto Buy Egg"
+subTitle.Size = UDim2.new(1,0,0,25)
+subTitle.Position = UDim2.new(0,0,0,130)
+subTitle.BackgroundTransparency = 1
+subTitle.TextColor3 = Color3.fromRGB(255,255,255)
+subTitle.Font = Enum.Font.SourceSansBold
+subTitle.TextSize = 18
+subTitle.TextXAlignment = Enum.TextXAlignment.Left
+subTitle.Parent = Frame
+
+-- Dropdown Egg Type (ใช้ TextButton + Menu จำลอง)
+local eggTypeBtn = Instance.new("TextButton")
+eggTypeBtn.Text = "Select Egg Type: RareEgg"
+eggTypeBtn.Size = UDim2.new(1,-20,0,30)
+eggTypeBtn.Position = UDim2.new(0,10,0,160)
+eggTypeBtn.BackgroundColor3 = Color3.fromRGB(70,70,70)
+eggTypeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+eggTypeBtn.Parent = Frame
+
+local eggTypes = {"CommonEgg", "RareEgg", "LegendaryEgg"}
+local currentEgg = 2
+
+eggTypeBtn.MouseButton1Click:Connect(function()
+    currentEgg = currentEgg % #eggTypes + 1
+    eggTypeBtn.Text = "Select Egg Type: " .. eggTypes[currentEgg]
+    print("Egg Type Selected:", eggTypes[currentEgg])
+end)
+
+-- Auto Buy Toggle
+createToggle("Auto Buy", 200, function(state)
+    print("Auto Buy:", state, " EggType:", eggTypes[currentEgg])
+end)
